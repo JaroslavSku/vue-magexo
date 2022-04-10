@@ -16,7 +16,6 @@ export default {
     uid: {
       deep: true,
       handler: async function (newUid) {
-        console.log("this is newuid", newUid);
         const uid = newUid;
         const query = `
         query ($uid: String) {
@@ -48,13 +47,12 @@ export default {
           query,
           variables,
         };
-        const proxyUrl = "https://still-island-39314.herokuapp.com/";
-        const url = "https://venia.magento.com/graphql";
+        const proxyUrl = process.env.VUE_APP_PROXY;
+        const url = process.env.VUE_APP_URL;
         try {
           const {
             data: { data },
           } = await axios.post(proxyUrl + url, graphqlQuery);
-          console.log(data);
           this.products = data;
         } catch (error) {
           alert(error);
@@ -70,8 +68,8 @@ export default {
   async mounted() {
     const uid = this.uid ? this.uid : "Mg==";
     const query = `
- query ($uid: String) {
-products(filter: {category_uid: {eq: $uid}}) {
+    query ($uid: String) {
+    products(filter: {category_uid: {eq: $uid}}) {
     items {
       name
       uid
@@ -84,14 +82,12 @@ products(filter: {category_uid: {eq: $uid}}) {
           regular_price {
             value
             currency
+              }
           }
+         }
         }
       }
     }
-  }
-  }
-
-
       `;
     const variables = {
       uid: uid,
@@ -101,13 +97,12 @@ products(filter: {category_uid: {eq: $uid}}) {
       query,
       variables,
     };
-    const proxyUrl = "https://still-island-39314.herokuapp.com/";
-    const url = "https://venia.magento.com/graphql";
+    const proxyUrl = process.env.VUE_APP_PROXY;
+    const url = process.env.VUE_APP_URL;
     try {
       const {
         data: { data },
       } = await axios.post(proxyUrl + url, graphqlQuery);
-      console.log(data);
       this.products = data;
     } catch (error) {
       alert(error);

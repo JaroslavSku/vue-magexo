@@ -1,14 +1,13 @@
 <template>
   <div class="main" v-if="products">
     <h1>Products</h1>
-    <h2>{{ uid }}</h2>
     <ProductItem :title="'Items'" :products="products" />
   </div>
 </template>
 
 <script>
 import ProductItem from "./ProductItem.vue";
-import { useRoute } from "vue-router";
+
 import axios from "axios";
 export default {
   name: "HomeComing",
@@ -20,12 +19,10 @@ export default {
     };
   },
   async mounted() {
-    const route = useRoute();
-    console.log("route", route.params.uid);
     const uid = "Mg==";
     const query = `
- query ($uid: String) { 
-products(filter: {category_uid: {eq: $uid}}) {
+    query ($uid: String) { 
+    products(filter: {category_uid: {eq: $uid}}) {
     items {
       name
       uid
@@ -39,13 +36,11 @@ products(filter: {category_uid: {eq: $uid}}) {
             value
             currency
           }
+         }
         }
       }
+     }
     }
-  }
-  }
-      
-      
       `;
     const variables = {
       uid: uid,
@@ -55,13 +50,12 @@ products(filter: {category_uid: {eq: $uid}}) {
       query,
       variables,
     };
-    const proxyUrl = "https://still-island-39314.herokuapp.com/";
-    const url = "https://venia.magento.com/graphql";
+    const proxyUrl = process.env.VUE_APP_PROXY;
+    const url = process.env.VUE_APP_URL;
     try {
       const {
         data: { data },
       } = await axios.post(proxyUrl + url, graphqlQuery);
-      console.log(data);
       this.products = data;
     } catch (error) {
       alert(error);

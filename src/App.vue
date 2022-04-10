@@ -60,16 +60,15 @@ export default {
       query,
       variables,
     };
-    const proxyUrl = "https://still-island-39314.herokuapp.com/";
-    const url = "https://venia.magento.com/graphql";
+    const proxyUrl = process.env.VUE_APP_PROXY;
+    const url = process.env.VUE_APP_URL;
     try {
       const {
         data: { data },
       } = await axios.post(proxyUrl + url, graphqlQuery);
-      console.log(data);
       this.data = data;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };

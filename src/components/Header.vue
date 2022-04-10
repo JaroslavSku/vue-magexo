@@ -50,6 +50,7 @@
               >
                 <router-link
                   class="menuitem-level3"
+                  @click="close()"
                   :to="{
                     name: 'Products',
                     params: {
@@ -101,7 +102,9 @@ export default {
       const newUrl = url.replace(/[,\s]+|\s+|[,/]|[,\s]+/g, "-").toLowerCase();
       return newUrl;
     },
-
+    close() {
+      this.show = !this.show;
+    },
     open() {
       this.show = !this.show;
     },

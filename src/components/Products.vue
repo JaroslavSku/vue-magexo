@@ -1,30 +1,76 @@
 <template>
   <div class="main" v-if="products">
-    <h1>Products</h1>
-    <h2>{{ uid }}</h2>
-    <ProductItem :title="'Items'" :products="products" />
+    <h1>Fashion products</h1>
+    <ProductItem :title="title" :products="products" />
   </div>
 </template>
 
 <script>
 import ProductItem from "./ProductItem.vue";
-import { useRoute } from "vue-router";
 import axios from "axios";
 export default {
   name: "ProductItems",
   components: { ProductItem },
-  props: ["uid"],
+  props: ["uid", "title"],
+  watch: {
+    uid: {
+      deep: true,
+      handler: async function (newUid) {
+        console.log("this is newuid", newUid);
+        const uid = newUid;
+        const query = `
+        query ($uid: String) {
+        products(filter: {category_uid: {eq: $uid}}) {
+            items {
+            name
+            uid
+            small_image{
+                url
+                label
+            }
+            price_range {
+                minimum_price {
+                regular_price {
+                    value
+                    currency
+                    }
+                }
+             }
+            }
+         }
+        }
+      `;
+        const variables = {
+          uid: uid,
+        };
+
+        const graphqlQuery = {
+          query,
+          variables,
+        };
+        const proxyUrl = "https://still-island-39314.herokuapp.com/";
+        const url = "https://venia.magento.com/graphql";
+        try {
+          const {
+            data: { data },
+          } = await axios.post(proxyUrl + url, graphqlQuery);
+          console.log(data);
+          this.products = data;
+        } catch (error) {
+          alert(error);
+        }
+      },
+    },
+  },
   data() {
     return {
       products: [],
     };
   },
   async mounted() {
-    const route = useRoute();
-    console.log("route", route.params.uid);
-    const uid = route?.params?.uid ? route?.params?.uid : "Mg==";
+    const uid = this.uid ? this.uid : "Mg==";
     const query = `
- query ($uid: String) { 
+ query ($uid: String) {
 products(filter: {category_uid: {eq: $uid}}) {
     items {
       name
@@ -44,8 +90,8 @@ products(filter: {category_uid: {eq: $uid}}) {
     }
   }
   }
-      
-      
+
+
       `;
     const variables = {
       uid: uid,
@@ -64,7 +110,7 @@ products(filter: {category_uid: {eq: $uid}}) {
       console.log(data);
       this.products = data;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };

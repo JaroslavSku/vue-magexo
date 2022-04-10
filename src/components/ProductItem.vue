@@ -38,7 +38,7 @@ export default {
     products: Object,
   },
   mounted() {
-    console.log(this.products);
+    console.log(this.title);
   },
 };
 </script>

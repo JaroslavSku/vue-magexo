@@ -64,7 +64,7 @@ products(filter: {category_uid: {eq: $uid}}) {
       console.log(data);
       this.products = data;
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   },
 };

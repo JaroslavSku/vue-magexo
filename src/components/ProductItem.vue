@@ -40,12 +40,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped lang="scss">
 .item-container {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   text-align: center;
+  @media screen and (max-width: 800px) {
+    justify-content: center;
+  }
 }
 .item-body {
   width: 11rem;

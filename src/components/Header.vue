@@ -103,7 +103,7 @@ export default {
       return newUrl;
     },
     close() {
-      this.show = !this.show;
+      this.show = false;
     },
     open() {
       this.show = !this.show;
